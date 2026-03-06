@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Broiler Profitability Calculator | Diary of a Farmer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/jpeg" href="image/logo.jpeg" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .calculator-section {
+        background-color: var(--light-bg);
+      }
+
+      .calculator-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-top: 2rem;
+      }
+
+      .calculator-form {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+      }
+
+      .calculator-form h3 {
+        color: var(--dark-green);
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+      }
+
+      .input-group {
+        margin-bottom: 1.2rem;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark-text);
+        font-size: 0.95rem;
+      }
+
+      .input-group label small {
+        font-weight: 400;
+        color: var(--light-text);
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(42, 125, 42, 0.1);
+      }
+
+      .calculate-btn {
+        background-color: var(--primary-green);
+        color: var(--white);
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: var(--transition);
+        margin-top: 1rem;
+      }
+
+      .calculate-btn:hover {
+        background-color: var(--dark-green);
+        transform: translateY(-2px);
+      }
+
+      .results-panel {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+      }
+
+      .results-panel h3 {
+        color: var(--dark-green);
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+      }
+
+      .results-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .result-card {
+        background: linear-gradient(135deg, var(--light-bg), #fff);
+        padding: 1rem 1.2rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-green);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .result-card.highlight {
+        background: linear-gradient(
+          135deg,
+          var(--primary-green),
+          var(--dark-green)
+        );
+        border-left: none;
+      }
+
+      .result-card.highlight .result-label,
+      .result-card.highlight .result-value {
+        color: var(--white);
+      }
+
+      .result-label {
+        color: var(--dark-text);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .result-value {
+        color: var(--primary-green);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: var(--light-text);
+      }
+
+      .no-results i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      @media (max-width: 992px) {
+        .calculator-wrapper {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header & Navigation (loaded dynamically) -->
+    <header data-component="header"></header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="tagline"><i class="fas fa-calculator"></i> Free Tool</div>
+        <h1>Broiler <span>Profitability Calculator</span></h1>
+        <p class="hero-subtitle">
+          Calculate your potential profits from broiler farming. Enter your farm
+          details below to get instant profitability analysis.
+        </p>
+      </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="section calculator-section">
+      <div class="container">
+        <div class="calculator-wrapper">
+          <!-- Input Form -->
+          <div class="calculator-form">
+            <h3><i class="fas fa-edit"></i> Enter Your Farm Details</h3>
+
+            <div class="input-group">
+              <label
+                >Farm Capacity
+                <small>(number of chicks per cycle)</small></label
+              >
+              <input type="number" id="farmCapacity" value="1000" min="1" />
+            </div>
+
+            <div class="input-group">
+              <label
+                >Total CAPEX <small>(equipment, housing, etc.)</small></label
+              >
+              <input
+                type="number"
+                id="capexTotal"
+                value="6220"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div class="input-group">
+              <label
+                >CAPEX Cycles
+                <small>(cycles to spread capital cost)</small></label
+              >
+              <input type="number" id="capexCycles" value="20" min="1" />
+            </div>
+
+            <div class="input-group">
+              <label
+                >OPEX per Cycle
+                <small>(feed, medicine, labor, utilities)</small></label
+              >
+              <input
+                type="number"
+                id="opexTotal"
+                value="2920"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Survival Rate <small>(e.g., 0.95 for 95%)</small></label>
+              <input
+                type="number"
+                id="survivalRate"
+                value="0.95"
+                min="0"
+                max="1"
+                step="0.01"
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Average Weight at Sale <small>(kg per bird)</small></label>
+              <input
+                type="number"
+                id="avgWeight"
+                value="2.3"
+                min="0"
+                step="0.1"
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Price per Kg <small>(selling price)</small></label>
+              <input
+                type="number"
+                id="pricePerKg"
+                value="3.40"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div class="input-group">
+              <label
+                >Cycles per Year
+                <small>(production cycles annually)</small></label
+              >
+              <input type="number" id="cyclesPerYear" value="6" min="1" />
+            </div>
+
+            <button class="calculate-btn" onclick="calculateProfitability()">
+              <i class="fas fa-calculator"></i> Calculate Profitability
+            </button>
+          </div>
+
+          <!-- Results Panel -->
+          <div class="results-panel">
+            <h3><i class="fas fa-chart-line"></i> Profitability Results</h3>
+
+            <div id="resultsContainer">
+              <div class="no-results">
+                <i class="fas fa-arrow-left"></i>
+                <p>
+                  Enter your farm details and click "Calculate Profitability" to
+                  see your results.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">How It <span>Works</span></h2>
+        <div class="mission-cards">
+          <div
+            class="mission-card"
+            style="background: linear-gradient(135deg, #2a7d2a, #1b5e20)"
+          >
+            <div class="mission-card-content">
+              <i class="fas fa-seedling mission-icon"></i>
+              <h3>1. Enter Your Data</h3>
+              <p>
+                Input your farm capacity, costs (CAPEX & OPEX), survival rate,
+                and market prices.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="mission-card"
+            style="background: linear-gradient(135deg, #4caf50, #2a7d2a)"
+          >
+            <div class="mission-card-content">
+              <i class="fas fa-cogs mission-icon"></i>
+              <h3>2. Instant Analysis</h3>
+              <p>
+                Our calculator processes your data to determine costs, revenue,
+                and profit margins.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="mission-card"
+            style="background: linear-gradient(135deg, #ffd54f, #ff9800)"
+          >
+            <div class="mission-card-content">
+              <i class="fas fa-chart-pie mission-icon"></i>
+              <h3>3. Make Decisions</h3>
+              <p>
+                Use the insights to plan your broiler farming operation with
+                confidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="join">
+      <div class="container">
+        <h2>Need Expert Guidance?</h2>
+        <p>
+          Our team of agricultural consultants can help you optimize your
+          poultry operation for maximum profitability. Get personalized advice
+          today.
+        </p>
+        <a href="contact.html" class="cta-button-large"
+          >Contact Us <i class="fas fa-arrow-right"></i
+        ></a>
+      </div>
+    </section>
+
+    <!-- Footer (loaded dynamically) -->
+    <footer data-component="footer"></footer>
+
+    <script src="script.js"></script>
+    <script>
+      function calculateProfitability() {
+        // Get input values
+        const farmCapacity =
+          parseFloat(document.getElementById("farmCapacity").value) || 0;
+        const capexTotal =
+          parseFloat(document.getElementById("capexTotal").value) || 0;
+        const capexCycles =
+          parseFloat(document.getElementById("capexCycles").value) || 1;
+        const opexTotal =
+          parseFloat(document.getElementById("opexTotal").value) || 0;
+        const survivalRate =
+          parseFloat(document.getElementById("survivalRate").value) || 0;
+        const avgWeight =
+          parseFloat(document.getElementById("avgWeight").value) || 0;
+        const pricePerKg =
+          parseFloat(document.getElementById("pricePerKg").value) || 0;
+        const cyclesPerYear =
+          parseFloat(document.getElementById("cyclesPerYear").value) || 1;
+
+        // Calculations
+        const birdsSold = Math.floor(farmCapacity * survivalRate);
+        const capexPerCycle = capexTotal / capexCycles;
+        const totalCostPerCycle = opexTotal + capexPerCycle;
+        const revenuePerBird = avgWeight * pricePerKg;
+        const totalRevenue = birdsSold * revenuePerBird;
+        const profitPerCycle = totalRevenue - totalCostPerCycle;
+        const profitMargin =
+          totalCostPerCycle > 0 ? (profitPerCycle / totalCostPerCycle) * 100 : 0;
+        const annualProfit = profitPerCycle * cyclesPerYear;
+        const breakEvenBirds =
+          revenuePerBird > 0 ? Math.ceil(totalCostPerCycle / revenuePerBird) : 0;
+        const costPerBird = birdsSold > 0 ? totalCostPerCycle / birdsSold : 0;
+
+        // Format currency
+        const formatCurrency = (num) =>
+          "$" + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        const formatNumber = (num) => num.toLocaleString();
+
+        // Generate results HTML
+        const resultsHTML = `
+                <div class="results-grid">
+                    <div class="result-card">
+                        <span class="result-label">Farm Capacity</span>
+                        <span class="result-value">${formatNumber(farmCapacity)} birds</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Birds Sold (after mortality)</span>
+                        <span class="result-value">${formatNumber(birdsSold)} birds</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">CAPEX per Cycle</span>
+                        <span class="result-value">${formatCurrency(capexPerCycle)}</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Total Cost per Cycle</span>
+                        <span class="result-value">${formatCurrency(totalCostPerCycle)}</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Revenue per Bird</span>
+                        <span class="result-value">${formatCurrency(revenuePerBird)}</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Total Revenue per Cycle</span>
+                        <span class="result-value">${formatCurrency(totalRevenue)}</span>
+                    </div>
+                    <div class="result-card highlight">
+                        <span class="result-label">Profit per Cycle</span>
+                        <span class="result-value">${formatCurrency(profitPerCycle)}</span>
+                    </div>
+                    <div class="result-card highlight">
+                        <span class="result-label">Profit Margin</span>
+                        <span class="result-value">${profitMargin.toFixed(2)}%</span>
+                    </div>
+                    <div class="result-card highlight">
+                        <span class="result-label">Annual Profit (${cyclesPerYear} cycles)</span>
+                        <span class="result-value">${formatCurrency(annualProfit)}</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Break-even Birds</span>
+                        <span class="result-value">${formatNumber(breakEvenBirds)} birds</span>
+                    </div>
+                    <div class="result-card">
+                        <span class="result-label">Cost per Bird</span>
+                        <span class="result-value">${formatCurrency(costPerBird)}</span>
+                    </div>
+                </div>
+            `;
+
+        document.getElementById("resultsContainer").innerHTML = resultsHTML;
+      }
+    </script>
+  </body>
+</html>

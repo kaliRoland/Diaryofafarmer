@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Diary of a Farmer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="image/logo.jpeg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header & Navigation (loaded dynamically) -->
+    <header data-component="header"></header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Get In <span>Touch</span></h1>
+            <p class="hero-subtitle">We'd love to hear from you. Reach out to us with any questions or inquiries about Diary of a Farmer.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <h2 class="section-title">Contact <span>Information</span></h2>
+                    
+                    <div class="info-items">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Address</h3>
+                                <p>Harland Street 1, Ipswich, IP2 8JU, Suffolk, United Kingdom</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Telephone</h3>
+                                <p><a href="tel:+447859256636">+44 785 9256636</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Email</h3>
+                                <p><a href="mailto:solomon@diaryofafarmer.co.uk">solomon@diaryofafarmer.co.uk</a></p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Business Hours</h3>
+                                <p>Monday - Friday: 9:00 AM - 5:00 PM GMT<br>Saturday & Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="social-section">
+                        <h3>Follow Us On Social Media</h3>
+                        <div class="social-links-contact">
+                            <a href="https://www.facebook.com/share/1FyjorXpPh/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/diaryofafarmer?igsh=MThscWdodWdobzZ3Nw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.tiktok.com/@diaryofafarmer?_r=1&_t=ZN-93C7ifAcBbG" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                            <a href="https://x.com/a_diary19893?s=11" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://youtube.com/@diaryof-a-farmer?si=bVNtkadVAPLkVDnj" target="_blank" rel="noopener noreferrer" class="social-link">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="contact-form-container">
+                    <h2 class="section-title">Send Us A <span>Message</span></h2>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="agreement" name="agreement" required>
+                            <label for="agreement" class="checkbox-label">I hereby agree that this data will be stored and processed for the purpose of establishing contact. I am aware that I can revoke my consent at any time.</label>
+                        </div>
+
+                        <button type="submit" class="cta-button-large">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (loaded dynamically) -->
+    <footer data-component="footer"></footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

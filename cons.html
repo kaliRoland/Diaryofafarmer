@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultation Services | Diary of a Farmer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/jpeg" href="image/logo.jpeg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header & Navigation (loaded dynamically) -->
+    <header data-component="header"></header>
+
+    <!-- Hero Section -->
+    <section class="consultation-hero">
+      <div class="container">
+        <div class="filter-badge">
+          <i class="fas fa-exclamation-circle"></i> Serious farmers and
+          agribusiness owners only. Consultations are practical, data-driven,
+          and solution-focused.
+        </div>
+        <h1>Expert <span>Consultation</span></h1>
+        <p class="hero-subtitle">
+          Get professional advice tailored to your farm's needs. Choose a
+          service below to get started.
+        </p>
+      </div>
+    </section>
+
+    <!-- Pricing / Services Section -->
+    <section class="pricing-section">
+      <div class="container">
+        <h2 class="section-title">Our <span>Services & Pricing</span></h2>
+
+        <div class="pricing-grid">
+          <!-- Service 1 -->
+          <div class="service-card">
+            <div class="service-icon">
+              <i class="fas fa-drumstick-bite"></i>
+            </div>
+            <h3>Broiler Production Consultation</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>30 Minutes</span> <span class="price-amount">$70</span>
+              </div>
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$125</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Broiler Production')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 2 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-syringe"></i></div>
+            <h3>Vaccination & Poultry Health</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>30 Minutes</span> <span class="price-amount">$62</span>
+              </div>
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$117</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Vaccination & Health')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 3 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-egg"></i></div>
+            <h3>Layer Production (Egg Business)</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>30 Minutes</span> <span class="price-amount">$70</span>
+              </div>
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$131</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Layer Production')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 4 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-seedling"></i></div>
+            <h3>Feed Formulation & Nutrition</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>30 Minutes</span> <span class="price-amount">$83</span>
+              </div>
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$152</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Feed Formulation')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 5 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Capital, Finance & Agribusiness Planning</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>45 Minutes</span> <span class="price-amount">$103</span>
+              </div>
+              <div class="price-item">
+                <span>90 Minutes</span> <span class="price-amount">$193</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Agribusiness Planning')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 6 -->
+          <div class="service-card">
+            <div class="service-icon">
+              <i class="fas fa-temperature-high"></i>
+            </div>
+            <h3>Brooding Management Consultation</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>30 Minutes</span> <span class="price-amount">$62</span>
+              </div>
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$117</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Brooding Management')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 7 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-building"></i></div>
+            <h3>Hatchery Management Consultation</h3>
+            <div class="service-price">
+              <div class="price-item">
+                <span>60 Minutes</span> <span class="price-amount">$110</span>
+              </div>
+              <div class="price-item">
+                <span>120 Minutes</span> <span class="price-amount">$221</span>
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('Hatchery Management')"
+              >Book Now</a
+            >
+          </div>
+
+          <!-- Service 8 -->
+          <div class="service-card">
+            <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
+            <h3>IT Services for Agribusiness</h3>
+            <div class="service-price">
+              <div class="price-item" style="justify-content: center">
+                <span>Custom Pricing</span>
+              </div>
+              <div
+                class="price-item"
+                style="justify-content: center; font-size: 0.8rem; color: #888"
+              >
+                Contact for quote
+              </div>
+            </div>
+            <a
+              href="#booking-form"
+              class="cta-button"
+              onclick="selectService('IT Services')"
+              >Book Now</a
+            >
+          </div>
+        </div>
+
+        <p
+          style="
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-text);
+          "
+        >
+          * Prices shown in USD. Local currency equivalents may apply.
+        </p>
+      </div>
+    </section>
+
+    <!-- Booking Form Section -->
+    <section class="form-section" id="booking-form">
+      <div class="container">
+        <div class="consultation-form-container">
+          <h3 class="form-section-title">Book Your Session</h3>
+
+          <form class="contact-form" id="consultationForm">
+            <!-- Personal Details -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="Enter your full name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="name@example.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone Number (WhatsApp preferred) *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                  placeholder="+123 456 7890"
+                />
+              </div>
+              <div class="form-group">
+                <label for="country">Country / Location *</label>
+                <input
+                  type="text"
+                  id="country"
+                  name="country"
+                  required
+                  placeholder="e.g., Nigeria, Kenya, UK"
+                />
+              </div>
+            </div>
+
+            <!-- Service Selection -->
+            <div class="form-group">
+              <label for="service-type">Type of Consultation Needed *</label>
+              <select id="service-type" name="service-type" required>
+                <option value="">-- Select a Service --</option>
+                <option value="Broiler Production">
+                  Broiler Production ($70 - $125)
+                </option>
+                <option value="Vaccination & Health">
+                  Vaccination & Poultry Health ($62 - $117)
+                </option>
+                <option value="Layer Production">
+                  Layer Production (Egg Business) ($70 - $131)
+                </option>
+                <option value="Feed Formulation">
+                  Feed Formulation & Nutrition ($83 - $152)
+                </option>
+                <option value="Agribusiness Planning">
+                  Capital, Finance & Planning ($103 - $193)
+                </option>
+                <option value="Brooding Management">
+                  Brooding Management ($62 - $117)
+                </option>
+                <option value="Hatchery Management">
+                  Hatchery Management ($110 - $221)
+                </option>
+                <option value="IT Services">
+                  IT Services (Custom Pricing)
+                </option>
+              </select>
+            </div>
+
+            <!-- Consultation Package -->
+            <div class="radio-group-container">
+              <span class="radio-group-label">Consultation Package *</span>
+              <div class="radio-options">
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="pkg-free"
+                    name="package"
+                    value="Free Discovery Call"
+                  />
+                  <label for="pkg-free">Free 15-min Discovery Call</label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="pkg-30"
+                    name="package"
+                    value="30-min Consultation"
+                  />
+                  <label for="pkg-30">30-minute Paid Consultation</label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="pkg-60"
+                    name="package"
+                    value="60-min Deep Dive"
+                  />
+                  <label for="pkg-60">60-minute Deep-dive Session</label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="pkg-project"
+                    name="package"
+                    value="Project Advisory"
+                  />
+                  <label for="pkg-project">Project-based Advisory</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preferred Method -->
+            <div class="radio-group-container">
+              <span class="radio-group-label"
+                >Preferred Consultation Type *</span
+              >
+              <div class="radio-options">
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="type-video"
+                    name="consultation-method"
+                    value="Video Call"
+                    checked
+                  />
+                  <label for="type-video"
+                    ><i class="fas fa-video"></i> One-on-one Video Call</label
+                  >
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="type-phone"
+                    name="consultation-method"
+                    value="Phone Call"
+                  />
+                  <label for="type-phone"
+                    ><i class="fas fa-phone-alt"></i> Phone Call</label
+                  >
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="type-whatsapp"
+                    name="consultation-method"
+                    value="WhatsApp"
+                  />
+                  <label for="type-whatsapp"
+                    ><i class="fab fa-whatsapp"></i> WhatsApp Chat</label
+                  >
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="type-report"
+                    name="consultation-method"
+                    value="Written Report"
+                  />
+                  <label for="type-report"
+                    ><i class="fas fa-file-alt"></i> Written Report</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Urgency -->
+            <div class="radio-group-container">
+              <span class="radio-group-label">Urgency Level *</span>
+              <div class="radio-options">
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="urgency-immediate"
+                    name="urgency"
+                    value="Immediate"
+                  />
+                  <label for="urgency-immediate"
+                    >Immediate (within 48 hrs)</label
+                  >
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="urgency-week"
+                    name="urgency"
+                    value="This Week"
+                    checked
+                  />
+                  <label for="urgency-week">This Week</label>
+                </div>
+                <div class="radio-option">
+                  <input
+                    type="radio"
+                    id="urgency-flexible"
+                    name="urgency"
+                    value="Flexible"
+                  />
+                  <label for="urgency-flexible">Flexible</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Marketing Source -->
+            <div class="form-group">
+              <label for="referral">How did you hear about us? *</label>
+              <select id="referral" name="referral" required>
+                <option value="">-- Select Option --</option>
+                <option value="Google">Google Search</option>
+                <option value="Instagram">Instagram</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Referral">Referral from Friend/Colleague</option>
+                <option value="Website Calculator">Website Calculator</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- File Upload -->
+            <div class="file-upload-wrapper">
+              <label class="radio-group-label">Optional File Upload</label>
+              <label for="file-upload" class="file-upload-label">
+                <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                <span
+                  >Click to upload farm records, photos, or business plan</span
+                >
+                <span class="info-text">(PDF, JPG, PNG - Max 5MB)</span>
+              </label>
+              <input
+                type="file"
+                id="file-upload"
+                name="file-upload"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+            </div>
+
+            <!-- Consent -->
+            <div class="form-group checkbox" style="margin-top: 1rem">
+              <input type="checkbox" id="consent" name="consent" required />
+              <label for="consent" class="checkbox-label"
+                >I agree to be contacted by Diary of a Farmer for consultation
+                purposes.</label
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="cta-button-large"
+              style="
+                width: 100%;
+                margin-top: 1rem;
+                border: none;
+                cursor: pointer;
+              "
+            >
+              Request Consultation
+            </button>
+            <p class="info-text" style="text-align: center; margin-top: 1rem">
+              No payment is required at this stage. We will contact you to
+              confirm details. If you proceed with a paid booking, payment is
+              taken securely via PayPal in USD ($). See our
+              <a href="payment-policy.html">Payment &amp; Refund Policy</a>.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (loaded dynamically) -->
+    <footer data-component="footer"></footer>
+
+    <script src="script.js"></script>
+    <script>
+      // Use URL hash to auto-select service if linked from elsewhere
+      function selectService(serviceName) {
+        const select = document.getElementById("service-type");
+        if (select) {
+          // Find option with matching text or value
+          for (let i = 0; i < select.options.length; i++) {
+            if (
+              select.options[i].value === serviceName ||
+              select.options[i].text.includes(serviceName)
+            ) {
+              select.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

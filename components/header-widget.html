@@ -1,0 +1,337 @@
+<!-- Diary of a Farmer Header Widget (HTML + CSS + JS) -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
+<style>
+  .doaf-header {
+    background-color: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+  }
+
+  .doaf-header * {
+    box-sizing: border-box;
+  }
+
+  .doaf-header .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .doaf-header .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .doaf-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .doaf-header .logo-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .doaf-header .logo-text {
+    font-family: "Roboto Slab", serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #1b5e20;
+  }
+
+  .doaf-header .logo-text span {
+    color: #2a7d2a;
+  }
+
+  .doaf-header .nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.6rem;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+  }
+
+  .doaf-header .nav-menu > li {
+    white-space: nowrap;
+  }
+
+  .doaf-header .dropdown {
+    position: relative;
+  }
+
+  .doaf-header .dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .doaf-header .dropdown-toggle::after {
+    content: "\25BE";
+    margin-left: 0.45rem;
+    font-size: 0.75rem;
+    color: #636e72;
+  }
+
+  .doaf-header .dropdown-menu {
+    list-style: none;
+    position: absolute;
+    top: calc(100% + 0.8rem);
+    left: 0;
+    min-width: 220px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 0.8rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+    margin: 0;
+  }
+
+  .doaf-header .dropdown-menu .nav-link {
+    display: block;
+    padding: 0.55rem 1.3rem;
+    font-weight: 500;
+  }
+
+  .doaf-header .dropdown-menu .nav-link::after {
+    display: none;
+  }
+
+  .doaf-header .dropdown.open .dropdown-menu,
+  .doaf-header .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .doaf-header .dropdown.open .dropdown-toggle::after,
+  .doaf-header .dropdown:hover .dropdown-toggle::after {
+    color: #2a7d2a;
+  }
+
+  .doaf-header .nav-link {
+    text-decoration: none;
+    color: #2d3436;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .doaf-header .nav-link:hover {
+    color: #2a7d2a;
+  }
+
+  .doaf-header .nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #2a7d2a;
+    bottom: -5px;
+    left: 0;
+    transition: all 0.3s ease;
+  }
+
+  .doaf-header .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .doaf-header .cta-button {
+    background-color: #2a7d2a;
+    color: #ffffff;
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #2a7d2a;
+  }
+
+  .doaf-header .cta-button:hover {
+    background-color: transparent;
+    color: #2a7d2a;
+  }
+
+  .doaf-header .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #1b5e20;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .doaf-header .mobile-menu-btn {
+      display: inline-block;
+    }
+
+    .doaf-header .nav-menu {
+      position: fixed;
+      top: 80px;
+      left: -100%;
+      flex-direction: column;
+      background-color: #ffffff;
+      width: 100%;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      padding: 2rem 0;
+      z-index: 999;
+    }
+
+    .doaf-header .nav-menu.active {
+      left: 0;
+    }
+
+    .doaf-header .dropdown-menu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    .doaf-header .dropdown.open .dropdown-menu {
+      display: block;
+    }
+  }
+</style>
+
+<header class="doaf-header">
+  <div class="container header-container">
+    <a href="/" class="logo">
+      <img
+        src="https://diaryofafarmer.co.uk/wp-content/uploads/2026/01/logo.jpeg"
+        alt="Diary of a Farmer Logo"
+        class="logo-img"
+      />
+      <div class="logo-text">Diary of a <span>Farmer</span></div>
+    </a>
+
+    <button
+      type="button"
+      class="mobile-menu-btn"
+      id="doafMobileMenuBtn"
+      aria-label="Toggle mobile menu"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <ul class="nav-menu" id="doafNavMenu">
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/about/" class="nav-link">About</a></li>
+      <li class="dropdown">
+        <button
+          type="button"
+          class="nav-link dropdown-toggle"
+          aria-haspopup="true"
+          aria-expanded="false"
+          data-dropdown-toggle
+        >
+          Insights &amp; Resources
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="https://diaryofafarmer.co.uk/farm" class="nav-link"
+              >Blog posts</a
+            >
+          </li>
+          <li><a href="/contact/" class="nav-link">Articles</a></li>
+          <li><a href="/contact/" class="nav-link">Newsletters</a></li>
+        </ul>
+      </li>
+      <li><a href="/calculator/" class="nav-link">Calculator</a></li>
+      <li><a href="/#marketplace" class="nav-link">Marketplace</a></li>
+      <li><a href="/consultation/" class="nav-link">Consultation</a></li>
+      <li><a href="/contact/" class="nav-link">Contact</a></li>
+      <li><a href="/#join" class="nav-link cta-button">Join Community</a></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  (function () {
+    const root = document.currentScript
+      ? document.currentScript.previousElementSibling
+      : document.querySelector(".doaf-header");
+
+    if (!root) return;
+
+    const mobileMenuBtn = root.querySelector("#doafMobileMenuBtn");
+    const navMenu = root.querySelector("#doafNavMenu");
+    const dropdowns = root.querySelectorAll(".dropdown");
+    const dropdownToggles = root.querySelectorAll("[data-dropdown-toggle]");
+
+    if (mobileMenuBtn && navMenu) {
+      mobileMenuBtn.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+        mobileMenuBtn.innerHTML = navMenu.classList.contains("active")
+          ? '<i class="fas fa-times"></i>'
+          : '<i class="fas fa-bars"></i>';
+      });
+
+      root.querySelectorAll(".nav-link:not(.dropdown-toggle)").forEach((link) => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("active");
+          mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          closeAllDropdowns();
+        });
+      });
+    }
+
+    function closeAllDropdowns(except) {
+      dropdowns.forEach((dropdown) => {
+        if (except && dropdown === except) return;
+        dropdown.classList.remove("open");
+        const toggle = dropdown.querySelector("[data-dropdown-toggle]");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    dropdownToggles.forEach((toggle) => {
+      toggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const dropdown = toggle.closest(".dropdown");
+        if (!dropdown) return;
+        const isOpen = dropdown.classList.contains("open");
+        closeAllDropdowns(dropdown);
+        dropdown.classList.toggle("open", !isOpen);
+        toggle.setAttribute("aria-expanded", String(!isOpen));
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target)) closeAllDropdowns();
+    });
+  })();
+</script>
+
