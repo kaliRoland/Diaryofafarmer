@@ -4,7 +4,7 @@ async function loadComponents() {
     const headerElement = document.querySelector('header');
     if (headerElement && headerElement.dataset.component === 'header') {
         try {
-            const response = await fetch('components/header.html');
+            const response = await fetch('components/header.html', { cache: 'no-cache' });
             const html = await response.text();
             headerElement.innerHTML = html;
         } catch (error) {
@@ -26,20 +26,83 @@ async function loadComponents() {
 
     // Initialize all functionality after components are loaded
     initNavigation();
+    initHeroSlideshow();
     initJoinButton();
     initSmoothScroll();
-    initScrollEffect();
     initBlogSection();
-    initMarketplaceSection();
-    initContactForm();
-    initConsultationForm();
+    initProductsSection();
+}
+
+async function initProductsSection() {
+    const container = document.getElementById('productList');
+    if (!container) return;
+    try {
+        const response = await fetch('products-proxy.php', { signal: AbortSignal.timeout(20000) });
+        if (!response.ok) throw new Error(`Products request failed: ${response.status}`);
+        const products = await response.json();
+        if (!Array.isArray(products)) throw new Error('Invalid products response');
+        container.replaceChildren();
+        if (!products.length) {
+            container.innerHTML = '<p class="products-status">No products are available at the moment.</p>';
+            return;
+        }
+        products.slice(0, 4).forEach(product => {
+            const card = document.createElement('article');
+            card.className = 'product-card';
+            const imageUrl = safeProductUrl(product.images?.[0]?.src);
+            const name = stripHtml(product.name || 'Product');
+            card.innerHTML = `
+                ${imageUrl ? `<img class="product-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(name)}" loading="lazy">` : '<div class="product-image product-placeholder" aria-hidden="true"><i class="fas fa-seedling"></i></div>'}
+                <div class="product-card-body">
+                    <h3>${escapeHtml(name)}</h3>
+                    <p class="product-price">${escapeHtml(formatProductPrice(product.prices))}</p>
+                    ${product.is_in_stock === false ? '<p class="product-stock">Out of stock</p>' : ''}
+                    <a class="blog-read-link" href="${escapeHtml(safeProductUrl(product.permalink) || document.getElementById('shopLink').href)}" target="_blank" rel="noopener noreferrer">View product <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>`;
+            const img = card.querySelector('img');
+            if (img) img.addEventListener('error', () => {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'product-image product-placeholder';
+                placeholder.textContent = 'Image unavailable';
+                img.replaceWith(placeholder);
+            }, { once: true });
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading products:', error);
+        container.innerHTML = '<p class="products-status">Unable to load products right now. Please try again later.</p>';
+    } finally {
+        container.setAttribute('aria-busy', 'false');
+    }
+}
+
+function safeProductUrl(value) {
+    try {
+        const url = new URL(value);
+        return ['https:', 'http:'].includes(url.protocol) ? url.href : '';
+    } catch { return ''; }
+}
+
+function formatProductPrice(prices) {
+    if (!prices || prices.price === '' || prices.price == null) return 'See product for pricing';
+    const units = Number(prices.currency_minor_unit ?? 2);
+    const format = value => {
+        const amount = Number(value) / (10 ** units);
+        if (!Number.isFinite(amount)) throw new Error('Invalid product price');
+        try {
+            return new Intl.NumberFormat('en-GB', { style: 'currency', currency: prices.currency_code }).format(amount);
+        } catch {
+            return `${prices.currency_symbol || ''}${amount.toFixed(units)}`;
+        }
+    };
+    if (prices.price_range) {
+        return `${format(prices.price_range.min_amount)} – ${format(prices.price_range.max_amount)}`;
+    }
+    return format(prices.price);
 }
 
 const BLOG_SOURCE_URL = 'https://diaryofafarmer.co.uk/farm';
 const BLOG_PROXY_URL = 'blog-proxy.php';
-
-const SHOP_SOURCE_URL = 'https://diaryofafarmer.co.uk/farm/shop';
-const PRODUCTS_PROXY_URL = 'products-proxy.php';
 
 async function initBlogSection() {
     const blogContainer = document.getElementById('blogPosts');
@@ -59,27 +122,8 @@ async function initBlogSection() {
                 <a href="${BLOG_SOURCE_URL}" target="_blank" rel="noopener noreferrer">Visit the blog</a>.
             </p>
         `;
-    }
-}
-
-async function initMarketplaceSection() {
-    const marketplaceContainer = document.getElementById('marketplaceProducts');
-    if (!marketplaceContainer) return;
-
-    try {
-        const products = await fetchWooCommerceProducts();
-        if (!products.length) {
-            throw new Error('No products were returned');
-        }
-        renderMarketplaceProducts(marketplaceContainer, products.slice(0, 4));
-    } catch (error) {
-        console.error('Error loading marketplace products:', error);
-        marketplaceContainer.innerHTML = `
-            <p class="marketplace-status">
-                Unable to load products right now. 
-                <a href="${SHOP_SOURCE_URL}" target="_blank" rel="noopener noreferrer">Visit the shop</a>.
-            </p>
-        `;
+    } finally {
+        blogContainer.setAttribute('aria-busy', 'false');
     }
 }
 
@@ -123,7 +167,7 @@ async function loadFromProxy() {
 }
 
 async function loadFromWordPressApi() {
-    const response = await fetch('https://diaryofafarmer.co.uk/wp-json/wp/v2/posts?per_page=3&_embed');
+    const response = await fetch('https://diaryofafarmer.co.uk/farm/wp-json/wp/v2/posts?per_page=3&_embed');
     if (!response.ok) {
         throw new Error(`WordPress API request failed with status ${response.status}`);
     }
@@ -134,7 +178,7 @@ async function loadFromWordPressApi() {
         excerpt: truncateText(stripHtml(post?.excerpt?.rendered || ''), 180),
         url: post?.link || BLOG_SOURCE_URL,
         date: post?.date || '',
-        image: post?._embedded?.['wp:featuredmedia']?.[0]?.source_url || ''
+        image: post?._embedded?.['wp:featuredmedia']?.[0]?.source_url || firstImageUrl(post?.content?.rendered || '')
     }));
 }
 
@@ -151,13 +195,21 @@ async function loadFromFarmFeed() {
         throw new Error('Invalid RSS feed response');
     }
 
-    return Array.from(xml.querySelectorAll('item')).slice(0, 3).map((item) => ({
-        title: (item.querySelector('title')?.textContent || 'Untitled Post').trim(),
-        excerpt: truncateText(stripHtml(item.querySelector('description')?.textContent || ''), 180),
-        url: (item.querySelector('link')?.textContent || BLOG_SOURCE_URL).trim(),
-        date: item.querySelector('pubDate')?.textContent || '',
-        image: ''
-    }));
+    return Array.from(xml.querySelectorAll('item')).slice(0, 3).map((item) => {
+        const content = item.getElementsByTagNameNS('http://purl.org/rss/1.0/modules/content/', 'encoded')[0]?.textContent || '';
+        return {
+            title: (item.querySelector('title')?.textContent || 'Untitled Post').trim(),
+            excerpt: truncateText(stripHtml(item.querySelector('description')?.textContent || ''), 180),
+            url: (item.querySelector('link')?.textContent || BLOG_SOURCE_URL).trim(),
+            date: item.querySelector('pubDate')?.textContent || '',
+            image: firstImageUrl(content)
+        };
+    });
+}
+
+function firstImageUrl(html) {
+    const document = new DOMParser().parseFromString(html, 'text/html');
+    return document.querySelector('img[src]')?.getAttribute('src') || '';
 }
 
 function renderBlogPosts(container, posts) {
@@ -168,10 +220,8 @@ function renderBlogPosts(container, posts) {
         article.className = 'blog-card';
 
         const formattedDate = formatBlogDate(post.date);
-        const safeUrl = sanitizeExternalUrl(post.url, BLOG_SOURCE_URL);
-        const safeImage = sanitizeExternalUrl(post.image, '');
-        const imageMarkup = safeImage
-            ? `<img src="${escapeHtml(safeImage)}" alt="${escapeHtml(post.title)}" class="blog-image">`
+        const imageMarkup = post.image
+            ? `<img src="${post.image}" alt="${escapeHtml(post.title)}" class="blog-image">`
             : `<div class="blog-image" aria-hidden="true"></div>`;
 
         article.innerHTML = `
@@ -180,7 +230,7 @@ function renderBlogPosts(container, posts) {
                 <p class="blog-date">${formattedDate}</p>
                 <h3 class="blog-card-title">${escapeHtml(post.title)}</h3>
                 <p class="blog-excerpt">${escapeHtml(post.excerpt || 'Read the full story on our blog.')}</p>
-                <a class="blog-read-link" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Read more <i class="fas fa-arrow-right"></i></a>
+                <a class="blog-read-link" href="${post.url}" target="_blank" rel="noopener noreferrer">Read more <i class="fas fa-arrow-right"></i></a>
             </div>
         `;
 
@@ -218,108 +268,34 @@ function escapeHtml(value) {
         .replace(/'/g, '&#039;');
 }
 
-function sanitizeExternalUrl(value, fallback) {
-    if (!value) return fallback;
-
-    try {
-        const parsed = new URL(value, window.location.href);
-        if (!['http:', 'https:'].includes(parsed.protocol)) {
-            return fallback;
-        }
-        return parsed.href;
-    } catch (error) {
-        return fallback;
-    }
-}
-
-async function fetchWooCommerceProducts() {
-    try {
-        const response = await fetch(`${PRODUCTS_PROXY_URL}?per_page=4&orderby=date&order=desc`);
-        if (!response.ok) {
-            throw new Error(`Products proxy request failed with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (!Array.isArray(data)) {
-            throw new Error('Products proxy returned an invalid payload');
-        }
-
-        return data.map((product) => ({
-            id: product?.id || '',
-            title: stripHtml(product?.title || 'Untitled Product'),
-            description: truncateText(stripHtml(product?.description || ''), 120),
-            price: product?.price || '0',
-            image: product?.image || '',
-            url: product?.url || SHOP_SOURCE_URL,
-            sale_price: product?.sale_price || null,
-            regular_price: product?.regular_price || product?.price || '0'
-        }));
-    } catch (error) {
-        console.warn('Products proxy fetch failed:', error);
-        return [];
-    }
-}
-
-function renderMarketplaceProducts(container, products) {
-    container.innerHTML = '';
-
-    if (!products.length) {
-        container.innerHTML = `<p class="marketplace-status">No products available at the moment.</p>`;
-        return;
-    }
-
-    products.forEach((product) => {
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card';
-
-        const safeUrl = sanitizeExternalUrl(product.url, SHOP_SOURCE_URL);
-        const safeImage = sanitizeExternalUrl(product.image, '');
-        const imageMarkup = safeImage
-            ? `<img src="${escapeHtml(safeImage)}" alt="${escapeHtml(product.title)}" class="product-image">`
-            : `<div class="product-image" aria-hidden="true"></div>`;
-
-        const priceMarkup = product.sale_price && product.sale_price < product.regular_price
-            ? `<div class="product-price"><span class="original-price">$${parseFloat(product.regular_price).toFixed(2)}</span><span class="sale-price">$${parseFloat(product.sale_price).toFixed(2)}</span></div>`
-            : `<div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>`;
-
-        productCard.innerHTML = `
-            <div class="product-image-wrapper">
-                ${imageMarkup}
-                <div class="product-overlay">
-                    <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="view-product-btn">View Details <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="product-card-body">
-                <h3 class="product-title">${escapeHtml(product.title)}</h3>
-                <p class="product-description">${escapeHtml(product.description)}</p>
-                ${priceMarkup}
-            </div>
-        `;
-
-        container.appendChild(productCard);
-    });
-}
-
 // Initialize navigation functionality
 function initNavigation() {
+    const header = document.querySelector('body.homepage header[data-component="header"]');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navMenu = document.getElementById('navMenu');
     const dropdowns = document.querySelectorAll('.dropdown');
     const dropdownToggles = document.querySelectorAll('[data-dropdown-toggle]');
+    const setMenuOpen = (open) => {
+        if (!navMenu || !mobileMenuBtn) return;
+        navMenu.classList.toggle('active', open);
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+        mobileMenuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+    };
+
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.nav-menu > li > a').forEach(link => {
+        if (link.getAttribute('href') === currentPage) link.setAttribute('aria-current', 'page');
+    });
 
     if (mobileMenuBtn && navMenu) {
         mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active')
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
+            setMenuOpen(!navMenu.classList.contains('active'));
         });
 
         // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-link:not(.dropdown-toggle)').forEach(link => {
             link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                setMenuOpen(false);
                 closeAllDropdowns();
             });
         });
@@ -355,7 +331,42 @@ function initNavigation() {
         if (!event.target.closest('.dropdown')) {
             closeAllDropdowns();
         }
+        if (!event.target.closest('header')) setMenuOpen(false);
     });
+    document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        const openToggle = document.querySelector('.dropdown.open [data-dropdown-toggle]');
+        const menuWasOpen = navMenu?.classList.contains('active');
+        closeAllDropdowns();
+        setMenuOpen(false);
+        if (menuWasOpen) mobileMenuBtn.focus();
+        else if (openToggle) openToggle.focus();
+    });
+    const mobileQuery = window.matchMedia('(max-width: 1100px)');
+    mobileQuery.addEventListener('change', () => {
+        setMenuOpen(false);
+        closeAllDropdowns();
+    });
+
+    if (header) {
+        const updateHeaderOnScroll = () => {
+            header.classList.toggle('is-scrolled', window.scrollY > 24);
+        };
+        updateHeaderOnScroll();
+        window.addEventListener('scroll', updateHeaderOnScroll, { passive: true });
+    }
+}
+
+function initHeroSlideshow() {
+    const slides = Array.from(document.querySelectorAll('.hero-slide'));
+    if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let activeSlide = 0;
+    window.setInterval(() => {
+        slides[activeSlide].classList.remove('is-active');
+        activeSlide = (activeSlide + 1) % slides.length;
+        slides[activeSlide].classList.add('is-active');
+    }, 6000);
 }
 
 // Join button interaction
@@ -379,12 +390,13 @@ function initJoinButton() {
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            color: #292723;
         `;
 
         modal.innerHTML = `
             <div style="background-color: white; padding: 2rem; border-radius: 10px; max-width: 500px; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h2 style="color: #1b5e20; margin: 0;">Join Our Community</h2>
+                    <h2 style="color: #292723; margin: 0;">Join Our Community</h2>
                     <button id="closeModal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #636e72;">&times;</button>
                 </div>
                 <p style="margin-bottom: 1.5rem;">Fill out this form to join the Diary of a Farmer community and get access to resources, networking, and opportunities.</p>
@@ -407,7 +419,7 @@ function initJoinButton() {
                             <option>Researcher/Advisor</option>
                         </select>
                     </div>
-                    <button type="submit" style="background-color: #2a7d2a; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; font-weight: 600; width: 100%; cursor: pointer;">Submit Application</button>
+                    <button type="submit" style="background-color: #e4b64e; color: #292723; padding: 1rem 2rem; border: none; border-radius: 5px; font-weight: 600; width: 100%; cursor: pointer;">Submit Application</button>
                 </form>
             </div>
         `;
@@ -447,159 +459,10 @@ function initSmoothScroll() {
             if (targetElement) {
                 window.scrollTo({
                     top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
+                    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
                 });
             }
         });
-    });
-}
-
-// Add scroll effect to header
-function initScrollEffect() {
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (header) {
-            if (window.scrollY > 100) {
-                header.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.12)';
-            } else {
-                header.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.08)';
-            }
-        }
-    });
-}
-
-async function submitFormData(form, formType) {
-    const formData = new FormData(form);
-    formData.set('form_type', formType);
-
-    const response = await fetch('submit-form.php', {
-        method: 'POST',
-        body: formData
-    });
-
-    const payload = await response.json().catch(() => null);
-
-    if (!response.ok) {
-        throw new Error(payload?.error || `Form request failed with status ${response.status}`);
-    }
-
-    if (!payload?.ok) {
-        throw new Error(payload?.error || 'Submission failed');
-    }
-}
-
-function showConsultationRequestPopup(title, message) {
-    const popup = document.createElement('div');
-    popup.className = 'request-popup-overlay';
-    popup.innerHTML = `
-        <div class="request-popup" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)}">
-            <button type="button" class="request-popup-close" aria-label="Close popup">&times;</button>
-            <h3>${escapeHtml(title)}</h3>
-            <p>${escapeHtml(message)}</p>
-            <button type="button" class="request-popup-action">OK</button>
-        </div>
-    `;
-
-    document.body.appendChild(popup);
-
-    const closePopup = () => {
-        if (popup.parentNode) {
-            popup.parentNode.removeChild(popup);
-        }
-    };
-
-    popup.querySelector('.request-popup-close')?.addEventListener('click', closePopup);
-    popup.querySelector('.request-popup-action')?.addEventListener('click', closePopup);
-    popup.addEventListener('click', (event) => {
-        if (event.target === popup) {
-            closePopup();
-        }
-    });
-}
-
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        try {
-            await submitFormData(form, 'contact');
-            alert('Your message has been received. We will get back to you soon.');
-            form.reset();
-        } catch (error) {
-            console.error('Contact form submission failed:', error);
-            alert('Unable to send your message right now. Please try again shortly.');
-        }
-    });
-}
-
-function initConsultationForm() {
-    const form = document.getElementById('consultationForm');
-    if (!form) return;
-    const submitButton = form.querySelector('button[type="submit"]');
-    const defaultButtonLabel = submitButton ? submitButton.innerHTML : '';
-
-    let statusMessage = form.querySelector('.consultation-submit-status');
-    if (!statusMessage && submitButton) {
-        statusMessage = document.createElement('p');
-        statusMessage.className = 'consultation-submit-status';
-        statusMessage.setAttribute('aria-live', 'polite');
-        submitButton.insertAdjacentElement('afterend', statusMessage);
-    }
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        if (form.dataset.submitting === 'true') {
-            return;
-        }
-
-        const fileInput = document.getElementById('file-upload');
-        const selectedFile = fileInput?.files?.[0];
-        const maxSizeBytes = 5 * 1024 * 1024;
-
-        if (selectedFile && selectedFile.size > maxSizeBytes) {
-            alert('The selected file exceeds the 5MB limit.');
-            return;
-        }
-
-        form.dataset.submitting = 'true';
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.classList.add('is-loading');
-            submitButton.textContent = 'Processing request...';
-        }
-        if (statusMessage) {
-            statusMessage.classList.remove('error');
-            statusMessage.textContent = 'Processing your consultation request...';
-        }
-
-        try {
-            await submitFormData(form, 'consultation');
-            if (statusMessage) {
-                statusMessage.textContent = '';
-            }
-            form.reset();
-            showConsultationRequestPopup(
-                'Request Received',
-                'Your consultation request has been sent successfully. We will contact you to confirm details.'
-            );
-        } catch (error) {
-            console.error('Consultation form submission failed:', error);
-            if (statusMessage) {
-                statusMessage.classList.add('error');
-                statusMessage.textContent = error?.message || 'Unable to submit your consultation request right now. Please try again shortly.';
-            }
-            alert(error?.message || 'Unable to submit your consultation request right now. Please try again shortly.');
-        } finally {
-            form.dataset.submitting = 'false';
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.classList.remove('is-loading');
-                submitButton.innerHTML = defaultButtonLabel;
-            }
-        }
     });
 }
 
