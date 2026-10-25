@@ -4,7 +4,7 @@ declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 
 $blogSourceUrl = 'https://diaryofafarmer.co.uk/farm';
-$wpApiUrl = 'https://diaryofafarmer.co.uk/wp-json/wp/v2/posts?per_page=3&_embed';
+$wpApiUrl = 'https://diaryofafarmer.co.uk/farm/wp-json/wp/v2/posts?per_page=3&_embed';
 $feedUrl = $blogSourceUrl . '/feed/';
 
 function send_json(int $status, array $payload): void
@@ -50,6 +50,20 @@ function clean_text(string $text): string
     return trim((string) $singleSpace);
 }
 
+function first_image_url(string $html): string
+{
+    if ($html === '') {
+        return '';
+    }
+
+    $document = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $document->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+    $image = $document->getElementsByTagName('img')->item(0);
+
+    return $image instanceof DOMElement ? $image->getAttribute('src') : '';
+}
+
 function truncate_text(string $text, int $maxLen): string
 {
     if (mb_strlen($text, 'UTF-8') <= $maxLen) {
@@ -73,6 +87,9 @@ function parse_wp_posts(string $jsonBody, string $fallbackUrl): array
         $url = (string) ($post['link'] ?? $fallbackUrl);
         $date = (string) ($post['date'] ?? '');
         $image = (string) ($post['_embedded']['wp:featuredmedia'][0]['source_url'] ?? '');
+        if ($image === '') {
+            $image = first_image_url((string) ($post['content']['rendered'] ?? ''));
+        }
 
         $posts[] = [
             'title' => $title !== '' ? $title : 'Untitled Post',
@@ -100,13 +117,14 @@ function parse_rss_posts(string $xmlBody, string $fallbackUrl): array
         $excerpt = truncate_text(clean_text((string) ($item->description ?? '')), 180);
         $url = trim((string) ($item->link ?? $fallbackUrl));
         $date = (string) ($item->pubDate ?? '');
+        $content = (string) ($item->children('http://purl.org/rss/1.0/modules/content/')->encoded ?? '');
 
         $posts[] = [
             'title' => $title !== '' ? $title : 'Untitled Post',
             'excerpt' => $excerpt,
             'url' => $url !== '' ? $url : $fallbackUrl,
             'date' => $date,
-            'image' => '',
+            'image' => first_image_url($content),
         ];
     }
 

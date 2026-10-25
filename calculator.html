@@ -165,6 +165,7 @@
         }
       }
     </style>
+    <script src="https://www.lekeelekee.com/lk-pixel.js?id=ZOfcUfePDNgPmnBRcU76a4Dc1Fy1PzBx" async></script>
   </head>
   <body>
     <!-- Header & Navigation (loaded dynamically) -->
@@ -172,6 +173,11 @@
 
     <!-- Hero Section -->
     <section class="hero">
+      <div class="hero-visual" aria-hidden="true">
+        <img class="hero-slide is-active" src="image/slide%201.jpg" alt="" fetchpriority="high" width="800" height="800">
+        <img class="hero-slide" src="image/slide2.jpg" alt="" width="800" height="800">
+        <img class="hero-slide" src="image/slide3.jpg" alt="" width="800" height="800">
+      </div>
       <div class="container hero-content">
         <div class="tagline"><i class="fas fa-calculator"></i> Free Tool</div>
         <h1>Broiler <span>Profitability Calculator</span></h1>
@@ -394,12 +400,10 @@
         const revenuePerBird = avgWeight * pricePerKg;
         const totalRevenue = birdsSold * revenuePerBird;
         const profitPerCycle = totalRevenue - totalCostPerCycle;
-        const profitMargin =
-          totalCostPerCycle > 0 ? (profitPerCycle / totalCostPerCycle) * 100 : 0;
+        const profitMargin = (profitPerCycle / totalCostPerCycle) * 100;
         const annualProfit = profitPerCycle * cyclesPerYear;
-        const breakEvenBirds =
-          revenuePerBird > 0 ? Math.ceil(totalCostPerCycle / revenuePerBird) : 0;
-        const costPerBird = birdsSold > 0 ? totalCostPerCycle / birdsSold : 0;
+        const breakEvenBirds = Math.ceil(totalCostPerCycle / revenuePerBird);
+        const costPerBird = totalCostPerCycle / birdsSold;
 
         // Format currency
         const formatCurrency = (num) =>

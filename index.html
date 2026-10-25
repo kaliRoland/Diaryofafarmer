@@ -5,42 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diary of a Farmer | Empowering Farmers Across Africa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Practical agricultural advice, learning and community. Diary of a Farmer connects African farmers and agribusinesses with finance, markets and sustainable growth.">
+    <link rel="preload" as="image" href="image/slide%201.jpg">
     <link rel="icon" type="image/jpeg" href="image/logo.jpeg">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://www.lekeelekee.com/lk-pixel.js?id=ZOfcUfePDNgPmnBRcU76a4Dc1Fy1PzBx" async></script>
 </head>
-<body>
+<body class="homepage">
+    <a class="skip-link" href="#main">Skip to content</a>
     <!-- Header & Navigation (loaded dynamically) -->
     <header data-component="header"></header>
 
+    <main id="main">
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="container hero-content">
+        <div class="hero-visual" aria-hidden="true">
+            <img class="hero-slide is-active" src="image/slide%201.jpg" alt="" fetchpriority="high" width="800" height="800">
+            <img class="hero-slide" src="image/slide2.jpg" alt="" width="800" height="800">
+            <img class="hero-slide" src="image/slide3.jpg" alt="" width="800" height="800">
+        </div>
+        <div class="container hero-layout">
+          <div class="hero-content">
             <div class="tagline">Grow. Learn. Build Wealth.</div>
-            <h1>Empowering Farmers Across Africa</h1>
-            <p class="hero-subtitle">A UK–Africa–based agribusiness and advisory initiative dedicated to positioning farmers and agribusinesses for access to finance, global markets, and sustainable growth.</p>
-            <a href="#join" class="cta-button-large">Join Our Community</a>
+            <h1>Empowering Farmers <span>Across Africa</span></h1>
+            <p class="hero-subtitle">Practical knowledge, expert advice and a connected community. Build a stronger future for your farm.</p>
+            <div class="hero-actions">
+              <a href="cons.html" class="cta-button-large">Explore Our Services <span aria-hidden="true">↗</span></a>
+              <a href="#about" class="text-link">Discover our approach <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
         </div>
     </section>
+
+    <div class="community-strip">
+      <div class="container community-strip-inner">
+        <p>Stronger agriculture starts with connection.</p>
+        <div><span>Farmers</span><span>Cooperatives</span><span>Agribusinesses</span><span>Investors</span></div>
+      </div>
+    </div>
 
     <!-- About Section -->
     <section class="section" id="about">
         <div class="container">
-            <h2 class="section-title">About <span>Diary of a Farmer</span></h2>
             <div class="about-content">
-                <div class="about-text">
-                    <p>Diary of a Farmer (DOAF) is a UK–Africa–based agribusiness and advisory initiative dedicated to strengthening African agricultural value chains and positioning farmers and agribusinesses for access to finance, global markets, and sustainable growth.</p>
-                    <p>Guided by the principle <strong>Grow. Learn. Build Wealth</strong>, the initiative promotes productivity, knowledge-driven decision-making, and long-term economic value creation.</p>
-                    
-                    <div class="highlight-box">
-                        <h3>Our Approach</h3>
-                        <p>Operating at the intersection of value chain development, sustainable agricultural finance, and practical farm-level execution, Diary of a Farmer supports farmers, cooperatives, agribusinesses, and investors to transition from fragmented production to structured, bankable, and scalable enterprises.</p>
+                <figure class="about-visual">
+                    <img src="image/agric-consul.jpg" alt="A poultry worker inspecting newly hatched chicks in an incubator facility" loading="lazy" width="480" height="480">
+                    <figcaption>
+                        <span>POULTRY / FARM SYSTEMS</span>
+                        <strong>Better systems<br>start on the farm.</strong>
+                    </figcaption>
+                </figure>
+                <div class="about-copy">
+                    <div class="about-text">
+                        <p class="about-eyebrow">Who we are</p>
+                        <h2 class="section-title">About <span>Diary of a Farmer</span></h2>
+                        <p>Diary of a Farmer (DOAF) is a UK–Africa–based agribusiness and advisory initiative dedicated to strengthening African agricultural value chains and positioning farmers and agribusinesses for access to finance, global markets, and sustainable growth.</p>
+                        <p>Guided by the principle <strong>Grow. Learn. Build Wealth</strong>, the initiative promotes productivity, knowledge-driven decision-making, and long-term economic value creation.</p>
+                        <a class="text-link" href="about.html">Get to know us <span aria-hidden="true">↗</span></a>
                     </div>
-                </div>
-                <div class="about-image">
-                    <img src="image/about.jpg" alt="African farmers working in field">
+                    <div class="approach-panel">
+                        <p class="approach-eyebrow">Our approach</p>
+                        <h3>From farm potential to lasting value.</h3>
+                        <p>We connect practical farm-level execution with value chain development and sustainable agricultural finance.</p>
+                        <ul class="approach-list">
+                          <li><span aria-hidden="true">✓</span> Improve productivity and farm practices</li>
+                          <li><span aria-hidden="true">✓</span> Build structured, bankable enterprises</li>
+                          <li><span aria-hidden="true">✓</span> Connect with finance and global markets</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,33 +83,33 @@
         <div class="container">
             <h2 class="section-title">Our <span>Focus Areas</span></h2>
             <div class="mission-cards">
-                <div class="mission-card mission-card-1" style="background-image: url('image/agric-consul.jpg');">
+                <div class="mission-card mission-card-1">
+                    <img class="focus-image" src="image/agric-consul.jpg" alt="A poultry worker tending chicks in an incubation facility" loading="lazy" width="600" height="400">
                     <div class="mission-card-content">
-                        <i class="fas fa-handshake mission-icon"></i>
                         <h3>Agricultural Consulting</h3>
                         <p>Expert advice and services to enhance farm productivity and sustainability through practical, market-driven solutions.</p>
                     </div>
                 </div>
                 
-                <div class="mission-card mission-card-2" style="background-image: url('image/online hub.jpg');">
+                <div class="mission-card mission-card-2">
+                    <img class="focus-image" src="image/online hub.jpg" alt="A group discussing agricultural learning resources" loading="lazy" width="600" height="400">
                     <div class="mission-card-content">
-                        <i class="fas fa-book mission-icon"></i>
                         <h3>Online Learning Hub</h3>
                         <p>Courses designed for farmers to improve their skills and knowledge, with mentorship and access to sustainable farming equipment.</p>
                     </div>
                 </div>
                 
-                <div class="mission-card mission-card-3" style="background-image: url('image/poultry management.jpg');">
+                <div class="mission-card mission-card-3">
+                    <img class="focus-image" src="image/poultry management.jpg" alt="A farmer inspecting cattle in a livestock shelter" loading="lazy" width="600" height="400">
                     <div class="mission-card-content">
-                        <i class="fas fa-egg mission-icon"></i>
                         <h3>Poultry and Livestock Management</h3>
                         <p>Training and resources for effective livestock management, focusing on poultry systems and sustainable practices.</p>
                     </div>
                 </div>
 
-                <div class="mission-card mission-card-4" style="background-image: url('image/NGO.jpg');">
+                <div class="mission-card mission-card-4">
+                    <img class="focus-image" src="image/NGO.jpg" alt="Community agricultural partnership" loading="lazy" width="600" height="400">
                     <div class="mission-card-content">
-                        <i class="fas fa-hands-helping mission-icon"></i>
                         <h3>NGO Partnerships</h3>
                         <p>Collaborating with NGOs to boost agricultural development and design capacity-building programs for communities.</p>
                     </div>
@@ -86,20 +118,16 @@
         </div>
     </section>
 
-    <!-- Marketplace Section -->
-    <section class="section marketplace-section" id="marketplace">
+    <!-- WooCommerce Products -->
+    <section class="section products-section" id="products" aria-labelledby="productsTitle">
         <div class="container">
-            <h2 class="section-title">Explore Our <span>Marketplace</span></h2>
-            <div class="marketplace-grid" id="marketplaceProducts">
-                <p class="marketplace-status">Loading products...</p>
+            <h2 class="section-title" id="productsTitle">Our <span>Products</span></h2>
+            <div class="products-grid" id="productList" aria-live="polite" aria-busy="true">
+                <p class="products-status loading-status">Loading products...</p>
             </div>
-            <div class="marketplace-footer-link">
-                <a href="https://diaryofafarmer.co.uk/farm/shop" target="_blank" rel="noopener noreferrer" class="cta-button">View All Products</a>
+            <div class="blog-footer-link">
+                <a href="https://diaryofafarmer.co.uk/farm/shop/" id="shopLink" target="_blank" rel="noopener noreferrer" class="cta-button">Visit Our Shop</a>
             </div>
-            <p class="marketplace-policy-note">
-                Payments are processed securely via PayPal in USD ($).
-                <a href="payment-policy.html">View Payment &amp; Refund Policy</a>.
-            </p>
         </div>
     </section>
 
@@ -107,8 +135,8 @@
     <section class="section blog-section" id="blog">
         <div class="container">
             <h2 class="section-title">Latest From The <span>Blog</span></h2>
-            <div class="blog-grid" id="blogPosts">
-                <p class="blog-status">Loading latest posts...</p>
+            <div class="blog-grid" id="blogPosts" aria-live="polite" aria-busy="true">
+                <p class="blog-status loading-status">Loading latest posts...</p>
             </div>
             <div class="blog-footer-link">
                 <a href="https://diaryofafarmer.co.uk/farm" target="_blank" rel="noopener noreferrer" class="cta-button">View All Blog Posts</a>
@@ -118,13 +146,17 @@
 
     <!-- CTA Section -->
     <section class="cta-section" id="join">
-        <div class="container">
+        <div class="container join-layout">
+          <img src="image/NGO.jpg" alt="People working together in an agricultural community" loading="lazy" width="600" height="400">
+          <div>
             <h2>Join Our Community</h2>
             <p>Become part of a growing network of farmers, cooperatives, agribusinesses, and investors working together to transform African agriculture. Access finance, global markets, and sustainable growth opportunities.</p>
-            <a href="#" class="cta-button-large" id="joinButton">Join Now <i class="fas fa-arrow-right"></i></a>
+            <a href="#" class="cta-button-large" id="joinButton">Join Now <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
     </section>
 
+    </main>
     <!-- Footer (loaded dynamically) -->
     <footer data-component="footer"></footer>
 
